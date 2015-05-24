@@ -24,9 +24,10 @@ Using the base plotting system, make a plot showing the total PM2.5 emission fro
 
 ```{r}
 aggregate<-with(NEI,tapply(Emissions,year,sum))
-png("plog1.png"")
+png('plot1.png')
 barplot(aggregate,xlab='Years',ylab=expression('PM'[2.5]*' emission'),
 main=expression('Total PM'[2.5]*' emissions at various years'))
+dev.off()
 ```
 
 

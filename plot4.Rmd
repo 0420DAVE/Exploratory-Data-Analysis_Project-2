@@ -1,0 +1,49 @@
+---
+title: "EDA_Project2_4"
+author: "Li Ying"
+date: "24 May 2015"
+output: html_document
+---
+
+Load data 
+
+```{r}
+if(!exists("NEI")){
+  NEI<-readRDS("./data/summarySCC_PM25.rds")
+}
+if(!exists("SCC")){
+  SCC<-readRDS("./data/Source_Classification_Code.rds")
+}
+dir()
+```
+
+Across the United States, how have emissions from coal combustion-related sources changed from 1999–2008?
+
+merge dataset 
+```{r}
+if(!exists("NEISCC")){
+  NEISCC <- merge(NEI, SCC, by="SCC")
+}
+```
+
+Extract data
+```{r}
+library(ggplot2)
+coalMatch<-grepl("coal",NEISCC$Short.Name,ignore.case=T)
+subset<-NEISCC[coalMatch,]
+aggregate<-aggregate(Emissions~year,subset,sum)
+```
+
+Plot data
+```{r}
+library(ggplot2)
+png('plot4.png',width=840,height=480)
+g<-ggplot(aggregate,aes(factor(year),Emissions))
+g<-g+geom_bar(stat="identity")+
+  xlab("year") +
+  ylab(expression('Total PM'[2.5]*' Emissions')) +
+  ggtitle('Total Emissions from coal sources from 1999 to 2008')
+print(g)
+dev.off()
+```
+
